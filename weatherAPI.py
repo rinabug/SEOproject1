@@ -21,3 +21,4 @@ def fetch_weather(name):
 
 if __name__ == "__main__":
     fetch_weather('newyork')
+    #testing with command line

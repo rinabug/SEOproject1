@@ -19,6 +19,7 @@ def main():
 
         if choice == '1':
             #enter location
+            
             print("outfit")
         elif choice == '2':
             

@@ -17,8 +17,16 @@ def main():
         print("3. Exit ")
         choice = input("Choose one of the options above: ")
 
-        if choice == '3':
+        if choice == '1':
+            #enter location
+            print("outfit")
+        elif choice == '2':
+            
+            print("fav")
+        elif choice == '3':
             print("Thank you for using Weather-Based Outfit Recommender")
             break
+        else:
+            print("Invalid. Please try again!")
 
 main()

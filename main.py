@@ -1,3 +1,5 @@
+from weatherAPI import fetch_weather
+from gptapi import recomendation
 #Prompts:
     #1. Get Outfit Reccomendation:
         #Ask user for location, data is fetched and sent to Chatgpt api
@@ -19,8 +21,19 @@ def main():
 
         if choice == '1':
             #enter location
-            
-            print("outfit")
+            weather_data = fetch_weather(input("what city are you in? "))
+            if weather_data :
+                rec = recomendation(weather_data)
+                print(rec)
+                save = input("would you like to save this outfit to your favorites? ( y / n ): ")
+                if save == 'y':
+                    username = input("Enter your username: ")
+                    
+                elif save == 'n':
+                    continue 
+                else: 
+                    print ("invalid username, try again: ")
+
         elif choice == '2':
             
             print("fav")

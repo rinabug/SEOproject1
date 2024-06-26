@@ -73,10 +73,10 @@ def authentication(username, password):
 
 
 #if __name__ == "__main__":
-create_new_user("anna", "hello")
+"""create_new_user("anna", "hello")
 authentication("anna", "hello")
 save_to_fav("anna", "shirt")
-view_favs("anna")
+view_favs("anna")"""
 
 
 

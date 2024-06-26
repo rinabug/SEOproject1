@@ -1,5 +1,6 @@
 from weatherAPI import fetch_weather
 from gptapi import recomendation
+from sql import save_to_fav, view_favs, authentication, create_new_user
 #Prompts:
     #1. Get Outfit Reccomendation:
         #Ask user for location, data is fetched and sent to Chatgpt api
@@ -28,6 +29,20 @@ def main():
                 save = input("would you like to save this outfit to your favorites? ( y / n ): ")
                 if save == 'y':
                     username = input("Enter your username: ")
+                    password = input("Enter your passowrd: ")
+                    if authentication(username, password):
+                        save_to_fav(username, rec)
+                    else: 
+                        create = input("Username or password is incorrect. Would you like to create a new account? ( y / n )? ")
+                        if create == 'y':
+                            username = input("Enter your username: ")
+                            password = input("Enter your passowrd: ")
+                            create_new_user(username, password) 
+                            save_to_fav(username, rec)
+                        elif create == 'n': 
+                            continue
+                        else : 
+                            print("Invalid please try again")
                     
                 elif save == 'n':
                     continue 
@@ -35,8 +50,13 @@ def main():
                     print ("invalid username, try again: ")
 
         elif choice == '2':
-            
-            print("fav")
+            username = input("Enter your username: ")
+            password = input("Enter your passowrd: ")
+            if authentication(username, password):
+                view_favs(username)
+            else: 
+                print("Username not found, get outfit recomendation and create a new account.")
+                
         elif choice == '3':
             print("Thank you for using Weather-Based Outfit Recommender")
             break

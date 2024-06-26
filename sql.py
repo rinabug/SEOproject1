@@ -1,6 +1,9 @@
 import sqlite3
 import pandas as pd
 import sqlalchemy as db
+connection = sqlite3.connect('users.db')
+connection = sqlite3.connect('favorites.db')
+cursor = connection.cursor()
 
 # Connect to SQLite database (will create if not exists)
 #connection = sqlite3.connect('favorites.db')
@@ -13,12 +16,14 @@ import sqlalchemy as db
 #cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", ('Alice', 30))
 #cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", ('Bob', 25))
 
+cursor.execute("CREATE TABLE IF NOT EXISTS users (username TEXT UNIQUE, password TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS favorites (username TEXT, outfit TEXT)")
 
 def save_to_fav(username, outfit_data):
     connection = sqlite3.connect('favorites.db')
     cursor = connection.cursor()
-
-    cursor.execute("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY, username TEXT, outfit TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS favorites (username TEXT, outfit TEXT)")
+    
     cursor.execute("INSERT INTO favorites (username, outfit) VALUES (?, ?)", (username, outfit_data))
 
     connection.commit()
@@ -29,7 +34,7 @@ def save_to_fav(username, outfit_data):
 def view_favs(username):
     connection = sqlite3.connect('favorites.db')
     cursor = connection.cursor()
-
+    cursor.execute("CREATE TABLE IF NOT EXISTS favorites (username TEXT, outfit TEXT)")
     cursor.execute("SELECT * FROM favorites WHERE username=?", (username,))
     favorite_outfits = cursor.fetchall()
     if favorite_outfits:
@@ -47,14 +52,17 @@ def view_favs(username):
 def create_new_user(username, password):
     connection = sqlite3.connect('users.db')
     cursor = connection.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (username TEXT UNIQUE, password TEXT)")
+    
     try: 
         cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password)) 
-        connection.commit() 
         print(f"User '{username}' created successfully.")
+        return True
     except sqlite3.IntegrityError: 
         print(f"User '{username}' already exists.")
-
+        return False
+    
+    connection.commit()
     cursor.close()
     connection.close()
 
@@ -62,11 +70,19 @@ def create_new_user(username, password):
 def authentication(username, password):
     connection = sqlite3.connect('users.db')
     cursor = connection.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (username TEXT UNIQUE, password TEXT)")
     cursor.execute("SELECT username FROM users")
     
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)) 
     user = cursor.fetchone()
 
+    if user: 
+        print("Authenticated successfully")
+        return True
+    else: 
+        print("Authentication failed")
+        return False
+    
     cursor.close()
     connection.close()
 

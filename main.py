@@ -26,7 +26,13 @@ def main():
                 rec = recomendation(weather_data)
                 print(rec)
                 save = input("would you like to save this outfit to your favorites? ( y / n ): ")
-                
+                if save == 'y':
+                    username = input("Enter your username: ")
+                    
+                elif save == 'n':
+                    continue 
+                else: 
+                    print ("invalid username, try again: ")
 
         elif choice == '2':
             

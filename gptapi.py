@@ -22,7 +22,7 @@ def recomendation(info):
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are giving outfit recomendation to the client based on this weather informetion."},
-            {"role": "user", "content": f'The Weather is : {info} What outfit should I wear?'}
+            {"role": "user", "content": f'The Weather is : {info} What outfit should I wear? Also, output the temperature in fahrenheit and celcius and output the outfit recomendation as a list.'}
         ]
     )   
     return completion.choices[0].message.content

@@ -57,14 +57,14 @@ def create_new_user(username, password):
     try: 
         cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password)) 
         print(f"User '{username}' created successfully.")
+        connection.commit()
         return True
     except sqlite3.IntegrityError: 
         print(f"User '{username}' already exists.")
         return False
-    
-    connection.commit()
-    cursor.close()
-    connection.close()
+    finally: 
+        cursor.close()
+        connection.close()
 
 
 def authentication(username, password):
@@ -75,16 +75,14 @@ def authentication(username, password):
     
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)) 
     user = cursor.fetchone()
-
+    cursor.close()
+    connection.close()
     if user: 
         print("Authenticated successfully")
         return True
     else: 
         print("Authentication failed")
         return False
-    
-    cursor.close()
-    connection.close()
 
 
 

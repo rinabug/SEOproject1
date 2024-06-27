@@ -23,60 +23,54 @@ def main():
         if choice == '1':
             #enter location
             weather_data = fetch_weather(input("what city are you in? "))
+
             if weather_data :
                 rec = recomendation(weather_data)
                 print(rec)
-                save = input("would you like to save this outfit to your favorites? ( y / n ): ")
-                if save == 'y':
+
+                save = input("Would you like to save this outfit to your favorites? ( y / n ): ")
+                if save.lower() == 'y':
                     username = input("Enter your username: ")
                     password = input("Enter your passowrd: ")
-                    if authentication(username, password) == True:
+
+                    if authentication(username, password):
                         save_to_fav(username, rec)
-                    elif authentication(username, password) == False: 
+                        print("Outfit saved to favorites.")
+                    else: 
                         create = input("Username or password is incorrect. Would you like to create a new account? ( y / n )? ")
-                        if create == 'y':
+                        if create.lower() == 'y':
                             username = input("Enter your username: ")
                             password = input("Enter your passowrd: ")
-                            new_user = create_new_user(username, password) 
-
-                            if  new_user == True: 
-                                print("Saved to favorites")
-                                create_new_user(username, password)
+                            if create_new_user(username, password): 
                                 save_to_fav(username, rec)
-                            elif  new_user == False: 
-                                username = input("Create new username: ")
-                                password = input("Create new passowrd: ")
-                                create_new_user(username, password)
-                                save_to_fav(username, rec)
-                                print("Account created successfullt and outfit saved to favorites")
+                                print("Account created successfully and outfit saved to favorites.")
                             else: 
-                                continue
-                            
+                                print("Failed to create new account. Please try again!")
                         elif create == 'n': 
                             continue
                         else : 
-                            print("Invalid please try again")
-                    else:
-                        print("Failed to save outfit please try again")
-                elif save == 'n':
+                            print("Returning to main menu")
+                elif save.lower() == 'n':
                     continue 
                 else: 
-                    print ("invalid username, try again: ")
+                    print ("Invalid input. Please try again ")
 
         elif choice == '2':
             username = input("Enter your username: ")
             password = input("Enter your passowrd: ")
-            check = authentication(username, password)
-            if  check == True:
+
+            if authentication(username, password):
                 view_favs(username)
-            elif check == False: 
-                print("Username not found, get outfit recomendation and create a new account.")
             else: 
-                print("viewing outfit failed, please try again")
+                print("Username not found. Get outfit recomendation and Create a new account.")
+
         elif choice == '3':
             print("Thank you for using Weather-Based Outfit Recommender")
             break
         else:
-            print("Invalid. Please try again!")
+            print("Invalid. Please enter a valid option (1-3).")
+        
+        print() #print newline
 
-main()
+if __name__ == "__main__":
+    main()

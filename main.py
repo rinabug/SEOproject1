@@ -17,9 +17,65 @@ def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None
 
-def main():
+
+def login(current_user, email_address):
+    print("Welcome to Weather Wear!")
+
     while True:
-        print("Weather-Based Outfit Recommender")
+        print("1. Returning User")
+        print("2. New User")
+        print("3. Stop")
+        choose = input("Choose one of the options above: ")
+
+        if choose == '1':
+            while True:
+                email = input("Enter your email address: ")
+                if is_valid_email(email):
+                    username = input("Enter your name: ")
+                    password = input("Enter your passowrd: ")
+                    if authentication(email, username, password):
+                        current_user = username
+                        email_address = email
+                        print(f"Welcome back, {current_user}!")
+                        return current_user, email_address
+                    else:
+                        print("Invalid email, name or password. Please try again!")
+                else:
+                    print("Invalid email format. Please try again!")
+
+        elif choose == '2':
+            create = input("Would you like to create a new account? ( y / n )? ")
+            if create.lower() == 'y':
+                while True:
+                    email = input("Enter your email address: ")
+                    if is_valid_email(email):
+                        username = input("Enter your name: ")
+                        password = input("Enter your passowrd: ")
+                        create_new_user(email, username,password)
+                        current_user = username
+                        email_address = email
+                        print(f"Account created for {current_user}!")
+                        return current_user, email_address
+                    else:
+                        print("Invalid email. Please try again!")
+            else:
+                break
+
+        elif choose == '3':
+            break
+
+        else:
+             print("Invalid. Please enter a valid option (1-3).")
+
+    return current_user, email_address
+
+def main():
+    current_user = None
+    email_address = None
+    current_user, email_address  = login(current_user, email_address)
+
+    while True:
+        print("\nWeather-Based Outfit Recommender")
         print("1. Get Outfit Reccomendation")
         print("2. View Favorite Outfits")
         print("3. Exit ")
@@ -35,65 +91,27 @@ def main():
 
                 save = input("Would you like to save this outfit to your favorites? ( y / n ): ")
                 if save.lower() == 'y':
-                    while True:
-                        email = input("Enter your email address: ")
-                        if is_valid_email(email):
-                            break
-                        else:
-                            if email == '':
-                                break
-                            else:
-                                print("Invalid email. Please try again!")
-                    username = input("Enter your name: ")
-                    password = input("Enter your passowrd: ")
-                    if authentication(email, password):
-                        save_to_fav(email, username, rec)
-                        print("Outfit saved to favorites.")
-                    else: 
-                        create = input("User not found! Would you like to create a new account? ( y / n )? ")
-                        if create.lower() == 'y':
-                            while True:
-                                email = input("Enter your email address: ")
-                                if is_valid_email(email):
-                                    break
-                                else:
-                                    print("Invalid email. Please try again!")
-                            username = input("Enter your username: ")
-                            password = input("Enter your passowrd: ")
-                            if create_new_user(email, username, password): 
-                                save_to_fav(email, username, rec)
-                                print("Account created successfully and outfit saved to favorites.")
-                            else: 
-                                print("Failed to create new account. Please try again!")
-                        elif create == 'n': 
-                            continue
-                        else : 
-                            print("Returning to main menu")
+                    save_to_fav(email_address, current_user, rec)
+                    print("Outfit saved to favorites.")
                 elif save.lower() == 'n':
                     continue 
                 else: 
                     print ("Invalid input. Please try again ")
 
         elif choice == '2':
-            while True:
-                email = input("Enter your email address: ")
-                if is_valid_email(email):
-                    break
-                else:
-                    if email == '':
-                        break
-                    else:
-                        print("Invalid email. Please try again!")
-
-            password = input("Enter your passowrd: ")
-
-            if authentication(email, password):
-                view_favs(email)
-            else: 
-                print("User not found. Get outfit recomendation and Create a new account.")
+            favorite_outfits = view_favs(email_address)
+            print("Here are your favorite outfits: ")
+            if favorite_outfits:
+                for i, j in enumerate(favorite_outfits, start=1):
+                    outfit_recommendation = j[0]  # Extracting the recommendation string from the tuple
+                    print(f"\nFavorite #{i}:")
+                    print(outfit_recommendation)
+                    print("-" * 40)
+            else:
+                print("No favorite outfits found.")
 
         elif choice == '3':
-            print("Thank you for using Weather-Based Outfit Recommender")
+            print("Thank you for using Weather-Wear!")
             break
         else:
             print("Invalid. Please enter a valid option (1-3).")

@@ -15,7 +15,7 @@ def save_to_fav(email, name, outfit_data):
     cursor.execute("CREATE TABLE IF NOT EXISTS favorites (email TEXT, name TEXT, outfit TEXT)")
     
     cursor.execute("INSERT INTO favorites (email, name, outfit) VALUES (?, ?, ?)", (email, name, outfit_data))
-    
+
     connection.commit()
     cursor.close()
     connection.close()
@@ -25,18 +25,11 @@ def view_favs(email):
     connection = sqlite3.connect('favorites.db')
     cursor = connection.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS favorites (email TEXT, name TEXT, outfit TEXT)")
-    cursor.execute("SELECT * FROM favorites WHERE email=?", (email,))
+    cursor.execute("SELECT outfit FROM favorites WHERE email=?", (email,))
     favorite_outfits = cursor.fetchall()
-    if favorite_outfits:
-        print("Here are your favorite outfits: ")
-        for row in favorite_outfits:
-            print(row)
-    else: 
-        print("No outfits added to favorites")
-
-
     cursor.close()
     connection.close()
+    return favorite_outfits
 
 
 def create_new_user(email, name, password):
@@ -45,7 +38,7 @@ def create_new_user(email, name, password):
     cursor.execute("CREATE TABLE IF NOT EXISTS users (email TEXT UNIQUE, name TEXT, password TEXT)")
     
     try: 
-        cursor.execute("INSERT INTO users (email, name, password) VALUES (?, ?, ?)", (email, name, password)) 
+        cursor.execute("INSERT INTO users (email, name, password) VALUES (?, ?, ?)", (email, name.lower(), password)) 
         print(f"User '{name}' created successfully.")
         connection.commit()
         return True
@@ -57,13 +50,17 @@ def create_new_user(email, name, password):
         connection.close()
 
 
-def authentication(email, password):
+def authentication(email, name, password):
+    email = email.strip()
+    name = name.strip().lower()
+    password = password.strip()
+
     connection = sqlite3.connect('users.db')
     cursor = connection.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS users (email TEXT UNIQUE, name TEXT, password TEXT)")
     cursor.execute("SELECT email FROM users")
     
-    cursor.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password)) 
+    cursor.execute("SELECT * FROM users WHERE email=? AND name=? AND password=?", (email, name, password)) 
     user = cursor.fetchone()
     cursor.close()
     connection.close()

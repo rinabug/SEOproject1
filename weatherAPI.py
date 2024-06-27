@@ -19,5 +19,5 @@ def fetch_weather(name):
     else:
         print(f"Failed to fetch weather data: {response.status_code}")
 
-if __name__ == "__main__":
-    fetch_weather('newyork')
+#if __name__ == "__main__":
+ #   fetch_weather('newyork')

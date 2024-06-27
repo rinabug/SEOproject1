@@ -15,7 +15,7 @@ def save_to_fav(email, name, outfit_data):
     cursor.execute("CREATE TABLE IF NOT EXISTS favorites (email TEXT, name TEXT, outfit TEXT)")
     
     cursor.execute("INSERT INTO favorites (email, name, outfit) VALUES (?, ?, ?)", (email, name, outfit_data))
-
+    
     connection.commit()
     cursor.close()
     connection.close()

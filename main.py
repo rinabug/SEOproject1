@@ -1,3 +1,4 @@
+import re
 from weatherAPI import fetch_weather
 from gptapi import recomendation
 from sql import save_to_fav, view_favs, authentication, create_new_user
@@ -12,6 +13,10 @@ from sql import save_to_fav, view_favs, authentication, create_new_user
         #Once user enters name, iterate through sql database to find user's name and if it matches up ask for password and then show info.
 
     #3. Exit
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
+
 def main():
     while True:
         print("Weather-Based Outfit Recommender")
@@ -30,19 +35,33 @@ def main():
 
                 save = input("Would you like to save this outfit to your favorites? ( y / n ): ")
                 if save.lower() == 'y':
-                    username = input("Enter your username: ")
+                    while True:
+                        email = input("Enter your email address: ")
+                        if is_valid_email(email):
+                            break
+                        else:
+                            if email == '':
+                                break
+                            else:
+                                print("Invalid email. Please try again!")
+                    username = input("Enter your name: ")
                     password = input("Enter your passowrd: ")
-
-                    if authentication(username, password):
-                        save_to_fav(username, rec)
+                    if authentication(email, password):
+                        save_to_fav(email, username, rec)
                         print("Outfit saved to favorites.")
                     else: 
-                        create = input("Username or password is incorrect. Would you like to create a new account? ( y / n )? ")
+                        create = input("User not found! Would you like to create a new account? ( y / n )? ")
                         if create.lower() == 'y':
+                            while True:
+                                email = input("Enter your email address: ")
+                                if is_valid_email(email):
+                                    break
+                                else:
+                                    print("Invalid email. Please try again!")
                             username = input("Enter your username: ")
                             password = input("Enter your passowrd: ")
-                            if create_new_user(username, password): 
-                                save_to_fav(username, rec)
+                            if create_new_user(email, username, password): 
+                                save_to_fav(email, username, rec)
                                 print("Account created successfully and outfit saved to favorites.")
                             else: 
                                 print("Failed to create new account. Please try again!")
@@ -56,13 +75,22 @@ def main():
                     print ("Invalid input. Please try again ")
 
         elif choice == '2':
-            username = input("Enter your username: ")
+            while True:
+                email = input("Enter your email address: ")
+                if is_valid_email(email):
+                    break
+                else:
+                    if email == '':
+                        break
+                    else:
+                        print("Invalid email. Please try again!")
+
             password = input("Enter your passowrd: ")
 
-            if authentication(username, password):
-                view_favs(username)
+            if authentication(email, password):
+                view_favs(email)
             else: 
-                print("Username not found. Get outfit recomendation and Create a new account.")
+                print("User not found. Get outfit recomendation and Create a new account.")
 
         elif choice == '3':
             print("Thank you for using Weather-Based Outfit Recommender")

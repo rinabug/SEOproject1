@@ -2,6 +2,7 @@ import re
 from weatherAPI import fetch_weather
 from gptapi import recomendation
 from sql import save_to_fav, view_favs, authentication, create_new_user
+"""
 #Prompts:
     #1. Get Outfit Reccomendation:
         #Ask user for location, data is fetched and sent to Chatgpt api
@@ -13,6 +14,8 @@ from sql import save_to_fav, view_favs, authentication, create_new_user
         #Once user enters name, iterate through sql database to find user's name and if it matches up ask for password and then show info.
 
     #3. Exit
+    """
+
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None

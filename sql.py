@@ -1,6 +1,6 @@
 import sqlite3
-import pandas as pd
-import sqlalchemy as db
+#import pandas as pd
+#import sqlalchemy as db
 connection = sqlite3.connect('users.db')
 connection = sqlite3.connect('favorites.db')
 cursor = connection.cursor()
